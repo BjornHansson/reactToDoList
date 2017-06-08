@@ -1,0 +1,19 @@
+{
+  "name": "react-to-do-list",
+  "version": "1.0.0",
+  "description": "My description",
+  "main": "index.js",
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/BjornHansson/reactToDoList.git"
+  },
+  "author": "Bjorn",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/BjornHansson/reactToDoList/issues"
+  },
+  "homepage": "https://github.com/BjornHansson/reactToDoList#readme"
+}
