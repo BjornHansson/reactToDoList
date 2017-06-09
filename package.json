@@ -1,24 +1,18 @@
 {
   "name": "react-to-do-list",
-  "version": "1.0.0",
-  "description": "My description",
-  "main": "index.js",
-  "scripts": {
-    "build": "babel src -d production",
-    "test": "test"
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "react": "^15.5.4",
+    "react-dom": "^15.5.4"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/BjornHansson/reactToDoList.git"
-  },
-  "author": "Bjorn",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/BjornHansson/reactToDoList/issues"
-  },
-  "homepage": "https://github.com/BjornHansson/reactToDoList#readme",
   "devDependencies": {
-    "babel-cli": "^6.24.1",
-    "babel-preset-react": "^6.24.1"
+    "react-scripts": "1.0.7"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject"
   }
 }
