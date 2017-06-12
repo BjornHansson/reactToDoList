@@ -1,11 +1,23 @@
-const express = require('express')
-const app = express()
-const port = 3001;
+const express = require('express');
+const server = express();
+const serverPort = 3001;
+const clientPort = 3000;
 
-app.get('/', function (req, res) {
-  res.send('Hello World!')
-})
+function setHeaders(res) {
+    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:' + clientPort);
+    res.setHeader('Content-Type', 'application/json');
+}
 
-app.listen(port, function () {
-  console.log('Example app listening on port ' + port)
-})
+server.get('/items', function (req, res) {
+    setHeaders(res);
+    res.json('{test:"get"}');
+});
+
+server.post('/items', function (req, res) {
+    setHeaders(res);
+    res.json('{test:"post"}');
+});
+
+server.listen(serverPort, function () {
+    console.log('Example app listening on port ' + serverPort);
+});

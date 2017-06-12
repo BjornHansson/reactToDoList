@@ -5,12 +5,24 @@ import fetch from 'node-fetch';
 
 class App extends Component {
     render() {
+        const url = 'http://localhost:3001/items';
+
         function handleClick(e) {
             e.preventDefault();
-            console.log('The link was clicked.');
-            fetch('https://api.github.com/users/github')
+            fetch(url)
             .then(res => res.json())
             .then(json => console.log(json));
+        }
+
+        function handleKey(e) {
+            if(e.keyCode === 13) {
+                fetch(url, { method: 'POST', body: 'a=1' })
+                .then(function(res) {
+                    return res.json();
+                }).then(function(json) {
+                    console.log(json);
+                });
+            }
         }
 
         return (
@@ -23,6 +35,7 @@ class App extends Component {
                     To get started, edit <code>src/App.js</code> and save to reload.
                 </p>
                 <button className="App-check-backend" onClick={handleClick}>Check backend</button>
+                <input className="App-new-item" onKeyUp={handleKey} />
             </div>
         );
     }
