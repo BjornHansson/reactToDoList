@@ -1,30 +1,63 @@
+// The import statement is used to import functions, objects or primitives that have been exported from an external module, another script, etc.
+// This feature is only beginning to be implemented in browsers natively at this time. Babel is used as compiler.
 import React, { Component } from 'react';
 import logo from './logo.svg';
 import './App.css';
-import fetch from 'node-fetch';
+import config from './config';
 
 class App extends Component {
-    render() {
-        const url = 'http://localhost:3001/items';
+    constructor(props) {
+        super(props);
+        this.config = new config();
+        this.state = {items: [], text: ''};
+        this.handleSubmit= this.handleSubmit.bind(this);
+        this.handleChange = this.handleChange.bind(this);
 
-        function handleClick(e) {
-            e.preventDefault();
-            fetch(url)
-            .then(res => res.json())
-            .then(json => console.log(json));
-        }
-
-        function handleKey(e) {
-            if(e.keyCode === 13) {
-                fetch(url, { method: 'POST', body: 'a=1' })
-                .then(function(res) {
-                    return res.json();
-                }).then(function(json) {
-                    console.log(json);
-                });
+        // https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch
+        fetch(this.config.serverEndpoint, {
+            method: 'GET',
+            headers: {
+                'Accept': 'application/json'
             }
-        }
+        })
+        .then((response) => response.json())
+        .then((responseJson) => {
+            this.setState({items: responseJson});
+        });
+    }
 
+    handleChange(event) {
+        this.setState({text: event.target.value});
+    }
+
+    handleSubmit(event) {
+        if(event.keyCode === 13) {
+            var newItem = {
+                text: this.state.text,
+                id: Date.now()
+            };
+            this.setState((prevState) => ({
+                items: prevState.items.concat(newItem),
+                text: ''
+            }));
+
+            fetch(this.config.serverEndpoint, {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(newItem)
+            })
+            .then(function(res) {
+                return res.json();
+            }).then(function(json) {
+                console.log(json);
+            });
+        }
+    }
+
+    render() {
         return (
             <div className="App">
                 <div className="App-header">
@@ -34,9 +67,23 @@ class App extends Component {
                 <p className="App-intro">
                     To get started, edit <code>src/App.js</code> and save to reload.
                 </p>
-                <button className="App-check-backend" onClick={handleClick}>Check backend</button>
-                <input className="App-new-item" onKeyUp={handleKey} />
+                <div className="App-list">
+                    <TodoList items={this.state.items} />
+                </div>
+                <input type="text" className="App-new-item" onKeyUp={this.handleSubmit} onChange={this.handleChange} value={this.state.text} />
             </div>
+        );
+    }
+}
+
+class TodoList extends React.Component {
+    render() {
+        return (
+            <ul>
+                {this.props.items.map(item => (
+                    <li key={item.id}>{item.text}</li>
+                ))}
+            </ul>
         );
     }
 }
