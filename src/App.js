@@ -3,6 +3,7 @@
 import React, { Component } from 'react';
 import logo from './logo.svg';
 import './App.css';
+import TodoList from './TodoList';
 import config from './config';
 
 class App extends Component {
@@ -72,18 +73,6 @@ class App extends Component {
                 </div>
                 <input type="text" className="App-new-item" onKeyUp={this.handleSubmit} onChange={this.handleChange} value={this.state.text} />
             </div>
-        );
-    }
-}
-
-class TodoList extends React.Component {
-    render() {
-        return (
-            <ul>
-                {this.props.items.map(item => (
-                    <li key={item.id}>{item.text}</li>
-                ))}
-            </ul>
         );
     }
 }
