@@ -1,15 +1,15 @@
 // The import statement is used to import functions, objects or primitives that have been exported from an external module, another script, etc.
 // This feature is only beginning to be implemented in browsers natively at this time. Babel is used as compiler.
 import React, { Component } from 'react';
-import logo from './logo.svg';
+import Logo from './logo.svg';
 import './App.css';
-import TodoList from './TodoList';
-import config from './config';
+import TodoList from '../todoList/TodoList';
+import Config from '../../config';
 
 class App extends Component {
     constructor(props) {
         super(props);
-        this.config = new config();
+        this.config = new Config();
         this.state = {items: [], text: ''};
         this.handleSubmit= this.handleSubmit.bind(this);
         this.handleChange = this.handleChange.bind(this);
@@ -62,7 +62,7 @@ class App extends Component {
         return (
             <div className="App">
                 <div className="App-header">
-                    <img src={logo} className="App-logo" alt="logo" />
+                    <img src={Logo} className="App-logo" alt="logo" />
                     <h2>Welcome to React</h2>
                 </div>
                 <p className="App-intro">
