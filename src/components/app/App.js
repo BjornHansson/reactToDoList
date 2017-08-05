@@ -9,11 +9,17 @@ import Config from '../../config';
 class App extends Component {
     constructor(props) {
         super(props);
-        this.config = new Config();
         this.state = {items: [], text: ''};
-        this.handleSubmit= this.handleSubmit.bind(this);
-        this.handleChange = this.handleChange.bind(this);
+        this.config = new Config();
+        // One way to avoid binding in render function is to bind in the constructor
+        this.handleInputSubmit= this.handleInputSubmit.bind(this);
+        this.handleInputChange = this.handleInputChange.bind(this);
+        this.handleDeleteClick = this.handleDeleteClick.bind(this);
 
+        this.getAllItems();
+    }
+
+    getAllItems() {
         // https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch
         fetch(this.config.serverEndpoint, {
             method: 'GET',
@@ -27,35 +33,51 @@ class App extends Component {
         });
     }
 
-    handleChange(event) {
-        this.setState({text: event.target.value});
-    }
-
-    handleSubmit(event) {
-        if(event.keyCode === 13) {
-            var newItem = {
-                text: this.state.text,
-                id: Date.now()
-            };
+    postItem(newItem) {
+        fetch(this.config.serverEndpoint, {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(newItem)
+        })
+        .then((response) => {
             this.setState((prevState) => ({
                 items: prevState.items.concat(newItem),
                 text: ''
             }));
+        });
+    }
 
-            fetch(this.config.serverEndpoint, {
-                method: 'POST',
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(newItem)
-            })
-            .then(function(res) {
-                return res.json();
-            }).then(function(json) {
-                console.log(json);
-            });
+    handleInputChange(event) {
+        this.setState({text: event.target.value});
+    }
+
+    handleInputSubmit(event) {
+        if(event.keyCode === 13) {
+            var newItem = {
+                text: this.state.text,
+                id: Date.now().toString() // Not guaranteed to be unique though
+            };
+            this.postItem(newItem);
         }
+    }
+
+    // This function will be passed down to TodoList
+    handleDeleteClick(event) {
+        const id = event.target.id;
+        fetch(this.config.serverEndpoint + '/' + id, {
+            method: 'DELETE',
+            headers: {
+                'Accept': 'application/json'
+            }
+        })
+        .then((response) => {
+            this.setState(prevState => ({
+                items: prevState.items.filter(item => item.id !== id)
+            }));
+        });
     }
 
     render() {
@@ -69,9 +91,9 @@ class App extends Component {
                     To get started, edit <code>src/App.js</code> and save to reload.
                 </p>
                 <div className="App-list">
-                    <TodoList items={this.state.items} />
+                    <TodoList items={this.state.items} config={this.state.config} onClick={this.handleDeleteClick} />
                 </div>
-                <input type="text" className="App-new-item" onKeyUp={this.handleSubmit} onChange={this.handleChange} value={this.state.text} />
+                <input type="text" className="App-new-item" onKeyUp={this.handleInputSubmit} onChange={this.handleInputChange} value={this.state.text} />
             </div>
         );
     }
